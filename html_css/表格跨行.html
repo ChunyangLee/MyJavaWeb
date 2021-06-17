@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh_en">
+<head>
+    <meta charset="UTF-8">
+    <title>表格跨行列</title>
+</head>
+<body>
+<h2>表格跨行列，colspan, rowspan</h2>
+<table width="500" height="500" border="1">
+    <tr>
+        <td colspan="2">1.1</td>
+        <td>1.2</td>
+        <td>1.3</td>
+        <td>1.4</td>
+    </tr>
+    <tr>
+        <td rowspan="2">2.1</td>
+        <td>2.2</td>
+        <td>2.3</td>
+        <td>2.4</td>
+        <td>2.5</td>
+    </tr>
+    <tr>
+        <td>3.1</td>
+        <td>3.2</td>
+        <td>3.3</td>
+        <td>3.4</td>
+    </tr>
+    <tr>
+        <td>4.1</td>
+        <td>4.2</td>
+        <td>4.3</td>
+        <td rowspan="2" colspan="2">4.4</td>
+    </tr>
+    <tr>
+        <td>5.1</td>
+        <td>5.2</td>
+        <td>5.3</td>
+    </tr>
+</table>
+<h2>iframe标签，在当前界面开一个区域，显示别的页面。 可以和超链接a标签组合使用。点击不同超链接跳转不同页面</h2>
+<iframe name="abc" src="hello.html" frameborder="10" width="600" height="600"></iframe>
+<ul>
+    <li><a href="hello.html" target="abc">hello.html</a></li>
+    <li><a href="表单.html" target="abc">表单.html</a></li>
+</ul>
+</body>
+</html>

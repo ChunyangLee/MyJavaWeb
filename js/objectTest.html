@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script type="text/javascript">
+        var obj={
+            name:"abc",
+            age:12,
+            fun:function () {
+                alert(this.name+this.age);
+            }
+        }
+        alert(obj.fun()); //alert两次， 函数体内alert一次， 第二次alert undefined。
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

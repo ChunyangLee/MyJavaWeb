@@ -1,0 +1,28 @@
+div{
+    border: 1px solid red;
+}
+span{
+    border: 2px solid yellow;
+}
+#id001{
+    color: blue;
+    font-size: 30px;
+    border: 1px dashed yellow;
+}
+
+#id002{
+    border: 1px solid red;
+    font-size: 20px;
+}
+
+table{
+    border: 2px solid red;
+    border-collapse: collapse;
+}
+td{
+    border: 1px solid black;
+}
+
+a{
+    text-decoration: none;
+}

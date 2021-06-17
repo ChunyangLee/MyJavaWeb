@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript">
+        //  [ ]  里面的任意一个
+        // var patt=/[0-9]/
+
+        //  \w 字母，数字，下划线
+        //  量词，都是包含即可，找到满足的就不检查了
+        //      *  >=0个。
+        //      +  至少一个
+        //      ?  0或1个，
+        //      {3} 连续3个
+        //      {3,6} 最多6个至少3个
+          //  即
+          var patt = /a*/;
+          alert(patt.test("b"));
+            //^a 以a开头，   a$ 以a结尾
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
