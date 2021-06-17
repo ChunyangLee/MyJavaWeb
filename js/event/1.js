@@ -37,5 +37,27 @@ window.onload=function () {
         }
     }
 
+}
 
+function checkAll() {
+    var hobbyCheckboxes = document.getElementsByName("hobby");
+    // var i = hobbyCheckboxes[1].checked;
+    // alert(typeof(hobbyCheckboxes[0].checked));  //boolean
+    // alert(hobbyCheckboxes[0].checked+1); //true+1=2   false+1=1
+    // alert(i^(0^1));   // i数值运算时按0，1处理， 同上， 因此可用这种方式取反选
+    for (let i = 0; i < hobbyCheckboxes.length; i++) {
+        hobbyCheckboxes[i].checked=true;
+    }
+}
+function checkNone() {
+    var hobbyCheckboxes = document.getElementsByName("hobby");
+    for (let i = 0; i < hobbyCheckboxes.length; i++) {
+        hobbyCheckboxes[i].checked=false;
+    }
+}
+function checkReverse() {
+    var hobbyCheckboxes = document.getElementsByName("hobby");
+    for (let i = 0; i < hobbyCheckboxes.length; i++) {
+        hobbyCheckboxes[i].checked=hobbyCheckboxes[i].checked^1;
+    }
 }
