@@ -7,8 +7,46 @@
 <script type="text/javascript">
 	
 	$(function(){
-		
-		
+		var itemsCount=0;
+
+		$("#checkedAllBtn").click(function () {
+			// $(":checkbox").val(["足球","篮球","羽毛球","乒乓球"]);
+			$(":checkbox").prop("checked",true);
+		});
+
+		$("#checkedNoBtn").click(function () {
+			$(":checkbox").prop("checked",false);
+		});
+		//反选
+		$("#checkedRevBtn").click(function () {
+			// 方式一：
+			$("input[name='items']").each(function () {
+				this.checked=!this.checked;
+			})
+
+			let checkedL = $(":checkbox[name='items']:checked").length;
+			let boxL = $(":checkbox[name='items']").length;
+
+			$("#checkedAllBox").prop("checked",checkedL==boxL);
+
+			//方式二：
+			// $(":checkbox[name='items']")
+		});
+		//为每个球类checkbox加上事件，点击， 总数+1 ,这样在不选的时候也加1不行
+		//每次点击计算总数，
+		//总数为4则，全选也选上，不为4自动不选了。
+		$(":checkbox[name='items']").click(function () {
+			itemsCount = $(":checkbox[name='items']:checked").length;
+
+			$("#checkedAllBox").prop("checked",itemsCount==4);
+		})
+
+		//为全选全不选复选框，绑定event
+		$("#checkedAllBox").click(function () {
+			//this 是checkedAllBox这个， dom对象。 因为让items和它一致即可。
+			$(":checkbox[name='items']").prop("checked",this.checked);
+		})
+
 	});
 	
 </script>

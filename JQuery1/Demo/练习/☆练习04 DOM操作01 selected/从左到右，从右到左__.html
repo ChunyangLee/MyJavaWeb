@@ -17,7 +17,25 @@
 	</style>
 	<script type="text/javascript" src="script/jquery-1.7.2.js"></script>
 	<script type="text/javascript">
-		
+		$(function () {
+			$("button").eq(0).click(function () {
+				// alert("aa");
+				$("select[name='sel01']>option:selected").appendTo($("select[name='sel02']"));
+			});
+			$("button").eq(2).click(function () {
+				// alert("aa");
+				$("select[name='sel02']>option:selected").appendTo($("select[name='sel01']"));
+			});
+			$("button").eq(1).click(function () {
+				// alert("aa");
+				$("select[name='sel01']>option").appendTo($("select[name='sel02']"));
+			});
+			$("button").eq(3).click(function () {
+				// alert("aa");
+				$("select[name='sel02']>option").appendTo($("select[name='sel01']"));
+			});
+
+		})
 		
 	
 	</script>

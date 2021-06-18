@@ -73,7 +73,23 @@ a:hover {
 <script type="text/javascript" src="script/jquery-1.7.2.js"></script>
 <script type="text/javascript">
 	$(function() {
+		$("li:gt(5):not(:last)").hide();
+		$("li:eq(3)").addClass("promoted")
 
+		$("div div a").click(function () {
+			$("li:gt(5):not(:last)").toggle();
+			// alert($("li:gt(5):not(:last)").is(":hidden"));
+			if($("li:gt(5):not(:last)").is(":hidden")){
+				$("div div a span").text("显示全部品牌");
+				$("div div a").parent().removeClass("showless");
+				$("div div a").parent().addClass("showmore");
+			}else{
+				$("div div a span").text("显示精简品牌");
+				$("div div a").parent().removeClass("showmore");
+				$("div div a").parent().addClass("showless");
+			}
+			return false;
+		})
 	});
 </script>
 </head>
