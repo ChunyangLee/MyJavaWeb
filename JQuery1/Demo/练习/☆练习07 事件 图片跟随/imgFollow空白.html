@@ -18,7 +18,20 @@
 <script type="text/javascript" src="script/jquery-1.7.2.js"></script>
 <script type="text/javascript">
 	$(function(){
-		
+		$("#small").bind("mouseover mouseout mousemove", function (event) {
+			if(event.type=="mouseover"){
+				// alert("aa");
+				$("#showBig").show(); //要显示跟随鼠标位置
+			}else if(event.type=="mouseout"){
+					$("#showBig").hide();
+			}else if(event.type=="mousemove"){
+				console.log(event);
+				$("#showBig").offset({
+					left:event.pageX+10,
+					top:event.pageY+10});
+			}
+
+		});
 	});
 </script>
 </head>

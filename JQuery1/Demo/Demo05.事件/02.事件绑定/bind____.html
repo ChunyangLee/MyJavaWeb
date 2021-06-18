@@ -8,14 +8,18 @@
 		<script type="text/javascript">
 		
 			$(function(){
-				//1.通常绑定事件的方式
-				//2.jQuery提供的绑定方式：bind()函数
-				//3.合并“鼠标移入”和“鼠标移出”事件
-				//4.合并单击事件
-				//5.切换元素可见状态
-				//6.只绑定一次
+				// $("h5").click(function () {
+				// 	console.log("h5点击！");
+				// })
+
+				$("h5").bind("click mouseover", function () {
+					// console.log("bind绑定时间！");
+					alert("bind绑定!");
+				})
+
+
 			});
-		
+
 		</script>
 	</head>
 	<body>
