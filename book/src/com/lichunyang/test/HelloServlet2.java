@@ -22,6 +22,7 @@ public class HelloServlet2 extends HttpServlet {
         System.out.println("当前工程路径: "+ context.getContextPath());
         System.out.println("工程的绝对路径"+context.getRealPath("/"));
 
-
+        //request对象是否是一个
+        System.out.println(request);
     }
 }

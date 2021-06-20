@@ -32,6 +32,22 @@
         <servlet-name>HelloServlet2</servlet-name>
         <servlet-class>com.lichunyang.test.HelloServlet2</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ParamGet</servlet-name>
+        <servlet-class>com.lichunyang.test.ParamGet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServletDispatch</servlet-name>
+        <servlet-class>com.lichunyang.test.ServletDispatch</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServletResponse</servlet-name>
+        <servlet-class>com.lichunyang.test.ServletResponse</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServletResponse2</servlet-name>
+        <servlet-class>com.lichunyang.test.ServletResponse2</servlet-class>
+    </servlet>
     <!--    servlet标签是给Tomcat服务器配置servlet程序，即一个java程序-->
 <!--    mapping是给这个程序配置地址， 就是访问哪个地址会执行这个servlet程序，-->
     <servlet-mapping>
@@ -42,6 +58,23 @@
         <servlet-name>HelloServlet2</servlet-name>
         <url-pattern>/hello2</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ParamGet</servlet-name>
+        <url-pattern>/paramGet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletDispatch</servlet-name>
+        <url-pattern>/servletDispatch</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletResponse</servlet-name>
+        <url-pattern>/servletResponse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletResponse2</servlet-name>
+        <url-pattern>/servletResponse2</url-pattern>
+    </servlet-mapping>
+
 
 
 </web-app>
