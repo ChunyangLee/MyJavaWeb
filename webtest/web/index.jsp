@@ -11,7 +11,7 @@
     <title>$Title$</title>
   </head>
   <body>
-  hello worldadsda!
+  webtest!
   $END$
   </body>
 </html>

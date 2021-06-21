@@ -66,3 +66,14 @@ resp.getOutPutStream()
 
 重定向，相当于浏览器又访问了一次，只不过地址是给定的。
 因此可以访问工程外的资源，不能访问WEB-INF中的资源，也不共享Request中的数据，
+
+### 3. 书城Demo
+书城项目，登陆和注册业务实现， 了解JavaEE的三层架构。
+#### 3.1 JavaEE三层架构
+
+##### Druid数据库连接池，连接mysql失败
+ Access denied for user ''@'localhost' (using password: YES)
+ `解决` 配置文件中username=root写成了user=root，
+
+##### Servlet程序和数据库交互时出的错
+`ClassLoader.getSystemClassLoader().getResourceAsStream("jdbc.properties");`这种方式加载jdbc配置文件，部署到Tomcat上会报异常。
