@@ -77,3 +77,188 @@ resp.getOutPutStream()
 
 ##### Servlet程序和数据库交互时出的错
 `ClassLoader.getSystemClassLoader().getResourceAsStream("jdbc.properties");`这种方式加载jdbc配置文件，部署到Tomcat上会报异常。
+
+##  2021.6.21 上
+
+### 1. JSP
+解决servlet回传html数据的繁琐问题，
+
+#### 1.1 什么是jsp文件
+
+#### 1.2 引出的问题，内容和html类似，但是可以像普通的servlet程序那样写东西么？
+##### jsp的头部page指令，可修改jsp界面一些属性
+> import
+> errorPage
+> ...
+>
+##### 声明脚本
+声明 属性，方法，代码块等等，在jsp翻译后的类中加入。
+##### 表达式脚本
+用于输出到页面上，代码脚本中写的sysout是输出到控制台的
+##### 代码脚本
+* 翻译到`_jspservice`方法中，因此可以使用`request`，`response`等现有九个内置对象。
+``` Java
+ public void _jspService(final javax.servlet.http.HttpServletRequest request, final javax.servlet.http.HttpServletResponse response)
+      throws java.io.IOException, javax.servlet.ServletException {}
+```
+* 可以配合表达式脚本，输出到页面上。
+* 一个语句也可以拆开写，
+```jsp
+<table border="3">
+    <%
+        for (int i = 0; i < 10; i++) {
+    %>
+    <tr>
+        <td><%="第"+i+"行"%></td>
+    </tr>
+
+    <%
+        }
+    %>
+```
+ 
+#### 1.3 九大内置对象，四大域对象
+* 四个域对象
+```java
+        //当前jsp页面有效
+        pageContext.setAttribute("key", "PageContext对象，pageContext"); 
+        //一次请求， 分发可以， 
+        request.setAttribute("key", "request");
+        //浏览器关了才无效
+        session.setAttribute("key", "HttpSession对象session");
+        //整个工程都有效
+        application.setAttribute("key", "ServletContext对象，application");
+```
+* out对象 （javax.servlet.jsp.JspWriter out）
+```Java
+    //一般使用out来输出，因为jsp底层翻译用的都是out输出， 用response的write，可能会打乱，
+    //out会在response的缓冲区后追加，最后一起输出给客户端。
+```
+
+#### 1.4 常用标签
+##### 静态包含
+直接将footer的翻译内容放到main的翻译内容里
+
+    <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    <html>
+    <head>
+        <title>Title</title>
+    </head>
+    <body>
+            头部信息 <br>
+            主题内容 <br>
+            <%@include file="/include/footer.jsp"%>
+    </body>
+    </html>
+##### 动态包含,(现在基本上不用了)
+* 在main的翻译内容里，只包含一条语句，`JspRuntimeLibrary.include(request, response, "/include/footer.jsp", out, false);`，
+    可以看到将main的out传过去了，因此footer可以在main的out缓冲区写东西，最后一期输出给客户端
+
+* 此外，因为传了request，因此可以传递参数，给footer中使用
+```jsp
+    <body>
+            头部信息 <br>
+            主题内容 <br>
+            <%@include file="/include/footer.jsp"%>
+    
+            动态包含，传递参数给footer使用 <br>
+            <jsp:include page="/include/footer.jsp">
+                <jsp:param name="username" value="root"/>
+                <jsp:param name="password" value="123456"/>
+            </jsp:include>
+    </body>
+```
+
+##### 请求转发  
+    <jsp:forward page="/scope2.jsp"></jsp:forward>
+    
+##  2021.6.21 下
+
+### 2.  类的加载起加载jdbc资源报错
+断点找到错误是，`URL url = classLoader.getResource("jdbc.properties");` 语句得到的是`null`，
+从别的module复制的包进新的module，  在原来的module中是好用的，新的module就不行了。
+
+
+### 3. Listenner
+`javax.servlet.ServletContextListener ServletContext` 监听器
+监听器的使用步骤。 
+* 第一步:我们需要定义一个类。然后去继承生命周期的监听器接口。 
+* 第二步:然后在 Web.xml 文件中配置。
+
+### 4. EL表达式
+替换jsp中的表达式输出，`<%= %>`
+主要用来输出域中的值。
+#### 4.1 取key的顺序
+    1. 先从PageContext中找 <br>
+    2.  request <br>
+    3.  session <br>
+    4. application <br>
+        
+#### 4.2 输出复杂Bean中的属性
+本质是找类中的get方法，
+#### 4.3 EL里的运算
+
+##### empty运算
+${empty key} ， 
+> "没有内容的"都为空， 空串，数组长度为0等
+
+##### .运算和[]运算
+* 取Bean中的属性的时候用.  `${p.name}`   setAttribute("p",person)
+* map中key为特殊字符，可以用[]，如`map['a.a']`  map.a.a是不行的。
+  普通的key的话，对于map.key是可以的
+
+##### EL中的11个隐藏对象
+    * pageContext     PageContextimpl类型       可以获取jsp中九大内置对象
+    * pageScope       Map类型, (下面都是)          获取域中的数据
+    * requestScope
+    * sessionScope
+    * applicationScope
+
+    param                                       请求参数
+    paramValues                                  多个值的时候
+     
+    header
+    headerValues
+
+    cookie                                      获取当前请求的cookie信息
+    
+    initParam                                   web.xml中配置的<context-param>中的参数
+pageContext 对象，可以获得jsp中内置的对象， 一般使用request获得协议，ip，端口等
+
+    ${pageContext.request.contextPath}， 获取工程路径，  /08_jsp
+
+### 5. JSTL标签库
+Jsp Standard Tag Library， 替换JSP中的代码脚本，上面的EL是替换表达式脚本，这样编写jsp代码就更加简洁了。
+
+#### 5.1 怎么使用
+> 先导入JSTL标签库的jar包，
+> taglib指令导入包
+>
+
+#### 5.2 导入jar包后也无法使用的情形， 在problem中修复， 确保artifacts里面有才行。
+
+#### 5.3 常用标签
+set 标签
+`<c:set scope="page" var="key" value="value" />`
+if 标签
+``` jsp
+    <c:if test="${12==12}">
+        \${}里面可以写运算
+    </c:if>
+```
+choose when 实现多路判断
+```jsp
+    <c:choose>
+        <c:when test="${pageScope.key == 'value'}">
+            key=value;
+    </c:when>
+        <c:when test="${pageScope.key !='value'}">
+            key!=value
+        </c:when>
+    </c:choose>
+```
+foeEach标签
+
+
+
+

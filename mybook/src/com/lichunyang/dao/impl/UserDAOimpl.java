@@ -6,6 +6,8 @@ import com.lichunyang.dao.UserDAO;
 import com.lichunyang.utils.JdbcUtils;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAOimpl extends BaseDAO<User> implements UserDAO {
     @Override
@@ -34,5 +36,15 @@ public class UserDAOimpl extends BaseDAO<User> implements UserDAO {
         User bean = getBean(con, sql, name,password);
         JdbcUtils.close(con);
         return  bean;
+    }
+
+    @Override
+    public List<User> queryusersByLastName(String lastName) {
+        List<User> listUser = new ArrayList<>();
+        Connection con = JdbcUtils.getConnection();
+        String sql = "SELECT * FROM t_user WHERE INSTR(username,?)<>0";
+        listUser = getBeans(con, sql, lastName);
+        JdbcUtils.close(con);
+        return listUser;
     }
 }

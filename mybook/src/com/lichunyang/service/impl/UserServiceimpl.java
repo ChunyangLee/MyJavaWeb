@@ -5,6 +5,8 @@ import com.lichunyang.dao.UserDAO;
 import com.lichunyang.dao.impl.UserDAOimpl;
 import com.lichunyang.service.UserService;
 
+import java.util.List;
+
 //业务层处理登陆和注册，需要和数据库交互，
 //UserServiceimpl 相当于办业务的柜台，每个方法里面怎么办的通过UserDAO办的，
 public class UserServiceimpl implements UserService {
@@ -30,5 +32,10 @@ public class UserServiceimpl implements UserService {
         if(user!=null) return true;
         else
             return false;
+    }
+
+    @Override
+    public List<User> getUsersByLastName(String lastname) {
+        return  udao.queryusersByLastName(lastname);
     }
 }
