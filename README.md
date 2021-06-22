@@ -257,8 +257,135 @@ choose when 实现多路判断
         </c:when>
     </c:choose>
 ```
-foeEach标签
+forEach标签
+``` jsp
+    <%
+        request.setAttribute("m", map);
+    %>
+    <c:forEach items="${requestScope.m}" var="item">
+            ${item} <br>
+            ${item.key} .运算会找到map中响应的getKey方法和getvalue方法
+    </c:forEach>
+    
+    <c:forEach begin="1" end="10" var="i">
+        <tr>
+        <c:forEach begin="1" end="5" var="j">
+            <td>${i*j}</td>
+        </c:forEach>
+        </tr>
+    </c:forEach>
 
+    <c:forEach items="${requestScope.stus}" var="stu" varStatus="status">
+        <tr>
+            <td>${stu.id}</td>
+            <td>${stu.username}</td>
+            <td>${stu.password}</td>
+            <td>${stu.age}</td>
+            <td>${stu.phone}</td>
+            <td>${status.index}</td>
+        </tr>
+    </c:forEach>
+```
+    * 可以组合使用begin 和items， 其他 
+    * step 步长
+    * varStatus实现了LoopTagStatus接口规范，里面有获取当前遍历对象的状态的方法，如索引index,当前对象current，begin等
 
+##  2021.6.22 上
+### 1. 文件的上传和下载
 
+#### 1.1 文件上传
+客户端浏览器上传数据， 服务器解析，将数据写入磁盘。
+```html
+<form action="/08_jsp/uploadServlet" method="post" enctype="multipart/form-data">
+</form>
+```
+    * ServletFileUpload类 用来解析上传的数据
+    
+``` java
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        System.out.println("test");
+//        //因为是表单数据多段拼接，以流的方式存储的，因此直接getParameter得不到数据
+//        ServletInputStream is = request.getInputStream();
+//        byte[] bytes = new byte[1024];
+//        int len;
+//        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//        while ( (len=is.read(bytes))!=-1 ){
+//            bos.write(bytes,0,len);
+//        }
+//        System.out.println(bos.toString());
 
+        //使用第三方jar包，解析
+        //判断是不是多段格式的，
+        ServletFileUpload fileUpload = new ServletFileUpload(new DiskFileItemFactory());
+        //1。 是多段格式才处理
+        if(ServletFileUpload.isMultipartContent(request)){
+            List<FileItem> list=null;
+            //2。 获取上传到的数据
+            try {
+                 list = fileUpload.parseRequest(request);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //3。 遍历上传到的每项
+            for(FileItem item: list){
+                //4。 判断是否是普通的表单项，否则是上传的文件类型
+                if(item.isFormField()){
+                    System.out.println(item.getFieldName());
+                    System.out.println(item.getString("utf-8"));
+                }else {
+                    System.out.println(item.getFieldName());
+                    System.out.println(item.getName());
+                    try {
+                        item.write(new File("/Users/lichunyang/Documents/1.jpg"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+```    
+
+#### 1.2 文件下载
+服务器读取要下载的数据，然后通过响应流给客户端浏览器，
+
+通过设置响应头告诉浏览器数据类型，和要下载用，不是显示出来的，指定下载到客户端浏览器的filename。
+    `response.setContentType(mimeType);`
+    `response.setHeader("Content-Disposition", "attachment;filename="+downloadFileName);`
+在浏览器端下载的文件名filename如果要为中文则要进行编码，
+  `response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode("豪车.jpg", "utf-8"));`
+
+```java
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //1. 获取要下载的文件名
+        String downloadFileName = "1.jpg";
+        //2。 读取要下载的文件内容
+        ServletContext servletContext = getServletContext();
+        InputStream is = servletContext.getResourceAsStream("/" + downloadFileName);
+        //4.  通过响应头告诉客户端数据类型
+        String mimeType = servletContext.getMimeType("/" + downloadFileName);
+        response.setContentType(mimeType);
+        System.out.println(mimeType);
+        response.setHeader("Content-Disposition", "attachment;filename="+downloadFileName);
+        //3.  传数据到客户端
+        ServletOutputStream os = response.getOutputStream();
+        IOUtils.copy(is, os);
+
+        //5.  通过响应头告诉客户端（浏览器），收到的数据是下载用，否则直接显示到浏览器上了
+    }
+```
+在浏览器端下载的文件名如果要为中文则要进行编码，
+  `response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode("豪车.jpg", "utf-8"));`
+  
+    响应头如下：
+    HTTP/1.1 200
+    Content-Disposition: attachment;filename=%E8%B1%AA%E8%BD%A6.jpg
+    Content-Type: image/jpeg
+    Transfer-Encoding: chunked
+    Date: Tue, 22 Jun 2021 03:43:58 GMT
+    Keep-Alive: timeout=20
+    Connection: keep-alive
+    
+#####  火狐浏览器要使用Base64编码， 别的都用url编码，
+    可通过getHeader("User-Agent") 获取浏览器引擎，弄个判断就行了   

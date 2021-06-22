@@ -7,8 +7,24 @@
         <servlet-name>SearchStudentServlet</servlet-name>
         <servlet-class>web.SearchStudentServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UploadServlet</servlet-name>
+        <servlet-class>web.UploadServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>Download</servlet-name>
+        <servlet-class>web.Download</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SearchStudentServlet</servlet-name>
         <url-pattern>/searchStudentServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UploadServlet</servlet-name>
+        <url-pattern>/uploadServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Download</servlet-name>
+        <url-pattern>/download</url-pattern>
     </servlet-mapping>
 </web-app>
