@@ -389,3 +389,38 @@ forEach标签
     
 #####  火狐浏览器要使用Base64编码， 别的都用url编码，
     可通过getHeader("User-Agent") 获取浏览器引擎，弄个判断就行了   
+  
+##  2021.6.22 下
+
+### 2. 书城demo登陆和注册优化
+
+#### 2.1 静态html界面中公共部分抽取出来，用jsp静态包含 
+base地址，也要动态获取，要获得服务器的，不能写成localhost的，否则客户端访问的时候就要从他本地找static下的样式了
+```jsp
+    <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+    
+    <%
+       String basePath =  request.getScheme() + "://"+request.getServerName()+":"
+                        +request.getServerPort()+request.getContextPath()+"/";
+    
+    //   request.setAttribute("basePath", basePath);
+    %>
+    <%=basePath%>
+    <%--${requestScope.basePath}--%>
+    <base href=<%=basePath%>>
+    <%--<base href=${requestScope.basePath}>--%>
+```
+<% xx %>中的变量只能在<%= xx %>中使用，要在${}中用的话需要放在域中，
+
+#### 2.2 用jsp代码替换之前的js代码，关于用户名密码不合法提示，且回显内容
+
+#### 2.3 合并登陆和注册servlet程序，
+* 添加隐藏域， 
+
+* 通过反射调用login和regist程序，这样以后再增加新方法，不用再改调用的语句，直接将新方法加入进去就行。通过action，获取方法字符串，通过反射得到对应的方法，  
+    
+* 别的模块，如图书模块也是如此，因此抽象出父类，抽取公共方法，让UserServlet等继承即可。
+
+* BeanUtils工具类， 将注册时获取到的参数封装，
+
+
