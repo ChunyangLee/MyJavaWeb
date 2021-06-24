@@ -1,6 +1,7 @@
 package com.lichunyang.web;
 
 import com.lichunyang.bean.Book;
+import com.lichunyang.bean.Page;
 import com.lichunyang.service.impl.BookServiceimpl;
 import com.lichunyang.utils.WebUtils;
 import org.apache.commons.beanutils.BeanUtils;
@@ -31,13 +32,15 @@ public class BookServlet extends BaseServlet {
         //浏览器会记录最后一次请求的全部信息
 //        request.getRequestDispatcher("/manager/bookServlet?action=list").forward(request, response);
         //使用重定向的话，记录的最后一次请求是action=list， 而转发记录的是action=add， 转发浏览器地址不变，还是add。
-        response.sendRedirect(request.getContextPath()+"/manager/bookServlet?action=list");
+        int pageNo = Integer.parseInt(request.getParameter("totalPageNoForAdd"))+1;
+        response.sendRedirect(request.getContextPath()+"/manager/bookServlet?action=page&pageNo="+pageNo);
     }
 
     protected void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        String delete_book_name = request.getParameter("delete_book_name");
         bsi.delteBookByName(request.getParameter("delete_book_name"));
-        response.sendRedirect(request.getContextPath()+"/manager/bookServlet?action=list");
+        int pageNo = Integer.parseInt(request.getParameter("totalPageNoForAdd"));
+        response.sendRedirect(request.getContextPath()+"/manager/bookServlet?action=page&pageNo="+pageNo);
     }
 
     protected void getBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -50,6 +53,20 @@ public class BookServlet extends BaseServlet {
     protected void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Book book = WebUtils.copyParamsToBean(request.getParameterMap(), new Book());
         bsi.updateBookByName(book, book.getName());
-        response.sendRedirect(request.getContextPath()+"/manager/bookServlet?action=list");
+        int pageNo = Integer.parseInt(request.getParameter("totalPageNoForAdd"));
+        response.sendRedirect(request.getContextPath()+"/manager/bookServlet?action=page&pageNo="+pageNo);
     }
+    protected void page(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //考虑到默认的情况，没传数字，或者没传则 默认值
+        Integer pageNo = WebUtils.parseInt(request.getParameter("pageNo"), 1);
+        Integer pageSize = WebUtils.parseInt(request.getParameter("pageSize"),4);
+
+        Page<Book> page = bsi.showPage(pageNo,pageSize );
+        page.setUrl("manager/bookServlet?action=page");
+        request.setAttribute("page", page);
+
+        request.getRequestDispatcher("/pages/manager/book_manager.jsp").forward(request, response);
+
+    }
+
 }

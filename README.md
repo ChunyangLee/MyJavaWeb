@@ -441,7 +441,7 @@ base地址，也要动态获取，要获得服务器的，不能写成localhost�
 
 ### 1. MVC概念
 
-### 2. 表达重复提交Bug，
+### 2. 表单重复提交Bug，
 ``` java
     protected void add(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Book book = WebUtils.copyParamsToBean(request.getParameterMap(), new Book());
@@ -467,9 +467,17 @@ base地址，也要动态获取，要获得服务器的，不能写成localhost�
 
 
 
+### 4.分页处理
+属于查询中的，分页展示。
+
+js中页可以跳转页面，
+```javascript
+    $("#searchPageButton").click(function () {
+        var pageValue = $("#pn_input").val();
+        location.href="manager/bookServlet?action=page&pageNo="+pageValue;
+    });
+```
 
 
-
-
-
- 
+##  2021.6.24
+前台和后台分页合并，前台查询`client/index.jsp`。

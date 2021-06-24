@@ -1,6 +1,7 @@
 package com.lichunyang.service.impl;
 
 import com.lichunyang.bean.Book;
+import com.lichunyang.bean.Page;
 import com.lichunyang.dao.impl.BookDAOimpl;
 import com.lichunyang.service.BookService;
 
@@ -32,5 +33,20 @@ public class BookServiceimpl implements BookService {
     @Override
     public List<Book> showBooks() {
        return bdi.queryBooks();
+    }
+
+    @Override
+    public Page<Book> showPage(Integer pageNo, Integer pageSize) {
+        return bdi.queryForPage(pageNo, pageSize);
+    }
+
+    @Override
+    public List<Book> queryBookByPrice(Double min, Double max) {
+        return bdi.queryBooksByPrice(min,max);
+    }
+
+    @Override
+    public Page<Book> showPage(Integer pageNo, Integer pageSize, Double min, Double max) {
+        return bdi.queryBooksByPriceLimit(pageNo,pageSize,min,max);
     }
 }

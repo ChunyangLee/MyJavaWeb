@@ -33,7 +33,8 @@
 <%--				如果是添加操作，则没有参数--%>
 <%--				修改操作，有参数，book_manager带过来的，因为要回显--%>
 <%--	${empty param.update_bookName}--%>
-	<input type="hidden" name="action" value=${empty param.update_bookName==false?"update":"add"}>
+			<input type="hidden" name="action" value=${empty param.update_bookName==false?"update":"add"}>
+			<input type="hidden" name="totalPageNoForAdd" value="${param.totalPageNoForAdd}">
 				<table>
 					<tr>
 						<td>名称</td>

@@ -17,4 +17,29 @@ public class WebUtils {
 
         return bean;
     }
+
+    public static Integer parseInt(String num, Integer defaultValue){
+
+        try {
+            return Integer.parseInt(num);
+        } catch (NumberFormatException e) {
+//            e.printStackTrace();
+//            System.out.println("使用默认值!");
+        }
+        return defaultValue;
+    }
+
+    public static Double parseDouble(String num, Double defaultValue){
+
+        try {
+            if(num!=null){
+                return Double.parseDouble(num);
+            }
+        } catch (NumberFormatException e) {
+//            e.printStackTrace();
+//            System.out.println("使用默认值!");
+            System.out.println("double parse 出现问题！");
+        }
+        return defaultValue;
+    }
 }

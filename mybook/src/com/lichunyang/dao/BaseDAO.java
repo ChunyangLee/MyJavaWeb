@@ -85,5 +85,13 @@ public abstract class BaseDAO<T> {
         return o;
     }
 
+    public int updateByBatch(Connection con, String sql, Object [][] params){
+        try {
+            return qr.batch(con, sql, params).length;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return  -1;
+    }
 
 }

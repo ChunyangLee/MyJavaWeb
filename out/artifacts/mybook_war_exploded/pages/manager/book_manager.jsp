@@ -11,7 +11,12 @@
 		$(function () {
 			$("a.deleteclass").click(function () {
 				return confirm("你确定要删除["+$(this).parent().parent().children(":first").val()+"]么？");
-			})
+			});
+
+			$("#searchPageButton").click(function () {
+				var pageValue = $("#pn_input").val();
+				location.href="manager/bookServlet?action=page&pageNo="+pageValue;
+			});
 		})
 	</script>
 </head>
@@ -34,15 +39,17 @@
 				<td>库存</td>
 				<td colspan="2">操作</td>
 			</tr>
-			<c:forEach items="${requestScope.books}" var="book" varStatus="status" >
+			<c:forEach items="${requestScope.page.bookList}" var="book" varStatus="status" >
 				<tr>
 					<td>${book.name}</td>
 					<td>${book.price}</td>
 					<td>${book.author}</td>
 					<td>${book.sales}</td>
 					<td>${book.stock}</td>
-					<td><a href="manager/bookServlet?action=getBook&update_bookName=${book.name}">修改</a></td>
-					<td><a class="deleteclass" href="manager/bookServlet?action=delete&delete_book_name=${book.name}">删除</a></td>
+					<td><a href="manager/bookServlet?action=getBook&update_bookName=${book.name}&
+					totalPageNoForAdd=${requestScope.page.pageTotalNo}">修改</a></td>
+					<td><a class="deleteclass" href="manager/bookServlet?action=delete&delete_book_name=${book.name}
+					&totalPageNoForAdd=${requestScope.page.pageTotalNo}">删除</a></td>
 				</tr>
 			</c:forEach>
 			<tr>
@@ -52,10 +59,13 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td><a href="pages/manager/book_edit.jsp">添加图书</a></td>
+				<td><a href="pages/manager/book_edit.jsp?totalPageNoForAdd=${requestScope.page.pageTotalNo}">添加图书</a></td>
 			</tr>	
 		</table>
+		<br>
+		<%@include file="/pages/common/page.jsp"%>
 	</div>
+
 
 	<%@include file="/pages/common/footer.jsp"%>
 
