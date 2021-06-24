@@ -207,6 +207,19 @@ ${empty key} ，
 * map中key为特殊字符，可以用[]，如`map['a.a']`  map.a.a是不行的。
   普通的key的话，对于map.key是可以的
 
+EL表达式取数组元素
+``` jsp
+    <%
+        List list = new ArrayList();
+        list.add(123);
+        list.add(13);
+        list.add(23);
+        request.setAttribute("list", list);
+    %>
+    ${requestScope.list.get(1)}
+    <hr>
+```
+
 ##### EL中的11个隐藏对象
     * pageContext     PageContextimpl类型       可以获取jsp中九大内置对象
     * pageScope       Map类型, (下面都是)          获取域中的数据
@@ -424,3 +437,39 @@ base地址，也要动态获取，要获得服务器的，不能写成localhost�
 * BeanUtils工具类， 将注册时获取到的参数封装，
 
 
+##  2021.6.23
+
+### 1. MVC概念
+
+### 2. 表达重复提交Bug，
+``` java
+    protected void add(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Book book = WebUtils.copyParamsToBean(request.getParameterMap(), new Book());
+        System.out.println("检测是否将请求参数注入bean\n"+book);
+        bsi.addBook(book);
+        //用请求转发的话会出Bug，F5刷新浏览器， 浏览器会自动提交记录的最后一次请求，
+        //浏览器会记录最后一次请求的全部信息
+//        request.getRequestDispatcher("/manager/bookServlet?action=list").forward(request, response);
+        //使用重定向的话，记录的最后一次请求是action=list， 而转发记录的是action=add， 转发浏览器地址不变，还是add。
+        response.sendRedirect(request.getContextPath()+"/manager/bookServlet?action=list");
+    }
+```
+### 3. 图书模块中的删除，修改
+修改时，book_edit.jsp中的表单，隐藏域提交和添加时提交的操作action="add",action="update"冲突了。
+
+动态修改隐藏域
+```html
+<input type="hidden" name="action" value="add">
+```
+*   请求时，method=add带参数过到book_edit.jsp中， `${param.emthod}`获取。
+
+*   也可以，`${empty param.update_bookName==false?"update":"add"}` 两个都是使用`${param}`获取请求参数来解决的
+
+
+
+
+
+
+
+
+ 

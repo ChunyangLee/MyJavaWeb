@@ -29,7 +29,11 @@
 		</div>
 		
 		<div id="main">
-			<form action="book_manager.jsp">
+			<form action="manager/bookServlet" method="get">
+<%--				如果是添加操作，则没有参数--%>
+<%--				修改操作，有参数，book_manager带过来的，因为要回显--%>
+<%--	${empty param.update_bookName}--%>
+	<input type="hidden" name="action" value=${empty param.update_bookName==false?"update":"add"}>
 				<table>
 					<tr>
 						<td>名称</td>
@@ -40,11 +44,11 @@
 						<td colspan="2">操作</td>
 					</tr>		
 					<tr>
-						<td><input name="book_name" type="text" value="时间简史"/></td>
-						<td><input name="book_price" type="text" value="30.00"/></td>
-						<td><input name="book_author" type="text" value="霍金"/></td>
-						<td><input name="book_sales" type="text" value="200"/></td>
-						<td><input name="book_stock" type="text" value="300"/></td>
+						<td><input name="name" type="text" value="${requestScope.update_books.get(0).name}"/></td>
+						<td><input name="price" type="text" value="${requestScope.update_books.get(0).price}"/></td>
+						<td><input name="author" type="text" value="${requestScope.update_books.get(0).author}"/></td>
+						<td><input name="sales" type="text" value="${requestScope.update_books.get(0).sales}"/></td>
+						<td><input name="stock" type="text" value="${requestScope.update_books.get(0).stock}"/></td>
 						<td><input type="submit" value="提交"/></td>
 					</tr>	
 				</table>
