@@ -1,7 +1,7 @@
 package com.lichunyang.bean;
 
 public class Book {
-    private int id;
+    private Integer id;
     private String name;
     private String author;
     private Double price;
@@ -25,11 +25,11 @@ public class Book {
                 '}';
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -82,7 +82,7 @@ public class Book {
              this.imgPath = imgPath;
     }
 
-    public Book(int id, String name, String author, Double price, Integer sales, Integer stock, String imgPath) {
+    public Book(Integer id, String name, String author, Double price, Integer sales, Integer stock, String imgPath) {
         this.id = id;
         this.name = name;
         this.author = author;

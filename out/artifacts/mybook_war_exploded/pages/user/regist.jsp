@@ -18,6 +18,12 @@
 						$("span.errorMsg").html("");
 					}
 				})
+
+				$("#codeImg").click(function () {
+					// alert("点击验证码，刷新！")
+					//后面带的参数是解决部分浏览器缓存的问题，缓存判断的是资源路径和参数都匹配才行
+					this.src="${basePath}/kaptcha.jpg?d="+ new Date();
+				})
 				//下面的代码是没有用jsp，最早一版用js弄的
 				// $("#sub_btn").click(function () {
 				// 	// alert("提交按钮！")
@@ -111,7 +117,7 @@
 									<label>验证码：</label>
 									<input class="itxt" type="text" style="width: 150px;" id="code" name="code"
 											value="${empty requestScope.code==true?"":requestScope.code}"/>
-									<img alt="" src="static/img/code.bmp" style="float: right; margin-right: 40px">
+									<img id="codeImg" alt="" src="kaptcha.jpg" style="float: right; margin-right: 20px; width: 80px; height: 35px;">
 									<br />
 									<br />
 									<input type="submit" value="注册" id="sub_btn" />

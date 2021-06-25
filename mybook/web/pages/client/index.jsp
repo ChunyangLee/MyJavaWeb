@@ -21,6 +21,23 @@
                 var pageValue = $("#pn_input").val();
                 location.href="bookServlet?action=page&pageNo="+pageValue+"&min="+"${min}"+"&max="+"${max}";
             });
+
+            // $("div.book_add button").click(function () {
+            $("button.add_cart").click(function () {
+                //添加购物车绑定点击事件，跳到Cartservlet程序操作购物车模块
+                // alert("test!")
+
+                //判断库存大于0才行
+                //将图书信息传过去，
+                var name=$(this).parent().parent().children(":first").children(".sp2").html();
+                var price=$(this).parent().parent().children(":eq(2)").children(".sp2").html();
+                var reg_g = /\d+\.\d+$/;
+                var result = price.match(reg_g);
+                var book_id = $(this).attr("bookId");
+                // alert(result);
+                location.href="${basePath}cartServlet?action=addItem"+"&name="+name+"&price="+result
+                                +"&pageId="+${requestScope.page.pageNo}+"&id="+book_id;
+            });
         })
     </script>
 </head>
@@ -28,12 +45,21 @@
 <div id="header">
     <img class="logo_img" alt="" src="static/img/logo.gif" >
     <span class="wel_word">网上书城</span>
-    <div>
-        <a href="pages/user/login.jsp">登录</a> |
-        <a href="pages/user/regist.jsp">注册</a> &nbsp;&nbsp;
-        <a href="pages/cart/cart.jsp">购物车</a>
-        <a href="pages/manager/manager.jsp">后台管理</a>
-    </div>
+<%--    ${pageContext.session.id}--%>
+<%--    ${empty sessionScopeion.username}--%>
+    <c:choose>
+        <c:when test="${empty sessionScope.username}">
+            <div>
+                <a href="pages/user/login.jsp">登录</a> |
+                <a href="pages/user/regist.jsp">注册</a> &nbsp;&nbsp;
+                <a href="pages/cart/cart.jsp">购物车</a>
+<%--                <a href="pages/manager/manager.jsp">后台管理</a>--%>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <%@include file="/pages/common/login_success_menu.jsp"%>
+        </c:otherwise>
+    </c:choose>
 </div>
 <div id="main">
     <div id="book">
@@ -79,8 +105,8 @@
                     <span class="sp1">库存:</span>
                     <span class="sp2">${book.stock}</span>
                 </div>
-                <div class="book_add">
-                    <button>加入购物车</button>
+                <div  class="book_add">
+                    <button bookId="${book.id}" class="add_cart">加入购物车</button>
                 </div>
             </div>
         </div>

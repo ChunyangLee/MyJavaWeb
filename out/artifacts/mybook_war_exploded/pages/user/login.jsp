@@ -57,11 +57,13 @@
 									<input type="hidden" name="action" value="login">
 									<label>用户名称：</label>
 									<input id="login_username" class="itxt" type="text" placeholder="请输入用户名" autocomplete="off" tabindex="1"
-										   name="username" value="${requestScope.username }" />
+										   name="username" value="${username }" /> ${sessionScope.username}
+<%--									这里能用，index里就不行，index里，判断为空，一--%>
 									<br />
 									<br />
 									<label>用户密码：</label>
-									<input id="login_password" class="itxt" type="password" placeholder="请输入密码" autocomplete="off" tabindex="1" name="password" />
+									<input id="login_password" class="itxt" type="password" placeholder="请输入密码" autocomplete="off" tabindex="1"
+										   name="password" value="${sessionScope.password}"/>
 									<br />
 									<br />
 									<input type="submit" value="登录" id="sub_btn" />
