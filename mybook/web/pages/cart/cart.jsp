@@ -20,6 +20,7 @@
 			$("input.update_cart_item").change(function () {
 				var count = $(this).val();
 				// alert(count);
+
 				location.href="cartServlet?action=updateItem&count="+count+"&id="+$(this).attr("item_id");
 			})
 		});
@@ -45,25 +46,38 @@
 				<td>金额</td>
 				<td>操作</td>
 			</tr>
-			<c:forEach items="${sessionScope.cart.items}" var="item">
-				<tr>
-					<td>${item.value.name}</td>
-					<td><input type="text" width="20px" item_id="${item.value.id}" class="update_cart_item" value="${item.value.count}"></td>
-					<td>${item.value.price}</td>
-					<td>${item.value.price*item.value.count}</td>
-					<td><a class="delete_but" href="cartServlet?action=deleteItem&itemId=${item.value.id}">删除</a></td>
-				</tr>
-			</c:forEach>
+			<c:choose>
+				<c:when test="${not empty sessionScope.cart.items}">
+					<c:forEach items="${sessionScope.cart.items}" var="item">
+						<tr>
+							<td>${item.value.name}</td>
+							<td><input type="text" style="width: 60px; align-self: center"  item_id="${item.value.id}" class="update_cart_item" value="${item.value.count}"></td>
+							<td>${item.value.price}</td>
+							<td>${item.value.price*item.value.count}</td>
+							<td><a class="delete_but" href="cartServlet?action=deleteItem&itemId=${item.value.id}">删除</a></td>
+						</tr>
+					</c:forEach>
+				</c:when>
+				<c:otherwise>
+					<tr>
+						<td  colspan="5"><a href="index.jsp">当前购物车为空！请回到主页浏览商品</a></td>
+					</tr>
+				</c:otherwise>
+			</c:choose>
+
 
 		</table>
-		
-		<div class="cart_info">
-			<span class="cart_span">购物车中共有<span class="b_count">${sessionScope.cart.totalCount}</span>件商品</span>
-			<span class="cart_span">总金额<span class="b_price">${sessionScope.cart.totalPrice}</span>元</span>
-			<span class="cart_span"><a href="cartServlet?action=clearCart">清空购物车</a></span>
-			<span class="cart_span"><a href="pages/cart/checkout">去结账</a></span>
-		</div>
-	
+
+<%--		购物车为空就不显示这个了--%>
+		<c:if test="${not empty sessionScope.cart.items}">
+			<div class="cart_info">
+				<span class="cart_span">购物车中共有<span class="b_count">${sessionScope.cart.totalCount}</span>件商品</span>
+				<span class="cart_span">总金额<span class="b_price">${sessionScope.cart.totalPrice}</span>元</span>
+				<span class="cart_span"><a href="cartServlet?action=clearCart">清空购物车</a></span>
+				<span class="cart_span"><a href="orderServlet?action=checkout">去结账</a></span>
+			</div>
+		</c:if>
+
 	</div>
 
 	<%@include file="/pages/common/footer.jsp"%>

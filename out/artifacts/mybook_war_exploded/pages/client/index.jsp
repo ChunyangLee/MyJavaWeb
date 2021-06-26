@@ -25,18 +25,26 @@
             // $("div.book_add button").click(function () {
             $("button.add_cart").click(function () {
                 //添加购物车绑定点击事件，跳到Cartservlet程序操作购物车模块
-                // alert("test!")
+                // 要登陆了才行，
+                <c:if test="${empty sessionScope.username}">
+                 alert("如果当前无登陆，跳到登陆界面");
+                location.href="userServlet?action=login";
+                </c:if>
+                <c:if test="${not empty sessionScope.username}">
+                    //判断库存大于0才行
+                    //将图书信息传过去，
+                    var name=$(this).parent().parent().children(":first").children(".sp2").html();
+                    var price=$(this).parent().parent().children(":eq(2)").children(".sp2").html();
+                    var reg_g = /\d+\.\d+$/;
+                    var result = price.match(reg_g);
+                    var book_id = $(this).attr("bookId");
+                    // alert(result);
+                    //可以不加pageNO了，使用getHeader可以获得，当前浏览器地址，即访问cartServlet?action=addItem之前的地址，
+                    //处理完添加购物车操作重定向回来就行了，
+                    location.href="cartServlet?action=addItem"+"&name="+name+"&price="+result
+                        +"&id="+book_id;
+                </c:if>
 
-                //判断库存大于0才行
-                //将图书信息传过去，
-                var name=$(this).parent().parent().children(":first").children(".sp2").html();
-                var price=$(this).parent().parent().children(":eq(2)").children(".sp2").html();
-                var reg_g = /\d+\.\d+$/;
-                var result = price.match(reg_g);
-                var book_id = $(this).attr("bookId");
-                // alert(result);
-                location.href="${basePath}cartServlet?action=addItem"+"&name="+name+"&price="+result
-                                +"&pageId="+${requestScope.page.pageNo}+"&id="+book_id;
             });
         })
     </script>
@@ -74,9 +82,9 @@
             </form>
         </div>
         <div style="text-align: center">
-            <span>您的购物车中有3件商品</span>
+            <span>您的购物车中有${sessionScope.cart.items.size()}件商品</span>
             <div>
-                您刚刚将<span style="color: red">时间简史</span>加入到了购物车中
+                您刚刚将<span style="color: red">${sessionScope.lastItem.name}</span>加入到了购物车中
             </div>
         </div>
         <c:forEach items="${requestScope.page.bookList}" var="book">

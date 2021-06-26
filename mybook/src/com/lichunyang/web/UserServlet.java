@@ -30,8 +30,8 @@ public class UserServlet extends BaseServlet {
 
         }else {
             //new added on 2021.6.25
-            System.out.println(request.getSession().getId());
-            System.out.println(request.getSession().isNew());
+//            System.out.println(request.getSession().getId());
+//            System.out.println(request.getSession().isNew());
             request.getSession().setAttribute("username", username);
             request.getSession().setAttribute("password", password);
             //
@@ -88,7 +88,7 @@ public class UserServlet extends BaseServlet {
         if(!session.isNew()){
             session.invalidate();
         }
-        response.sendRedirect("/index.jsp");
+        response.sendRedirect("/mybook/index.jsp");
     }
 
 

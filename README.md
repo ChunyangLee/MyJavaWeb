@@ -508,10 +508,21 @@ js中页可以跳转页面，
 ### 5. 购物车板块
 基本的添加，修改数量，清空和删除完成。
 
-还有点小问题，翻到别的页加入购物车后，后回到第一页了，涉及到添加完购物车之后的请求分发问题。 还有添加后库存-1，销量+1，
+还有点小问题，
+* 翻到别的页加入购物车后，后回到第一页了，涉及到添加完购物车之后的请求分发问题。
+* 还有添加后库存-1，销量+1，
+* 没登陆点购物车，要先跳到登陆。
 
+获取请求头的Referer，访问服务器的浏览器地址
+```java
+        System.out.println("当前访问服务器的浏览器地址: "+ request.getHeader("Referer"));
+//        System.out.println("addItem servlet 获取到了pageId: "+pageId);
+        response.sendRedirect(request.getHeader("Referer")); 
+```
 
+## 2021.6.26
 
+### 1. 订单模块
 
 
 

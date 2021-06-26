@@ -38,6 +38,8 @@ public class Cart {
         if(removeItem!=null){
             this.totalPrice -= removeItem.getCount()*removeItem.getPrice();
             this.totalCount -= removeItem.getCount();
+        }else {
+            System.out.println("无此id的商品！");
         }
     }
 
@@ -49,6 +51,12 @@ public class Cart {
 
     public void updateItemCountById(Integer id, Integer count){
         CartItem cartItem = this.items.get(id);
+        //服务器端检验，修改的值的合法性，
+        if(count<0){
+            System.out.println("修改的数量为负，不合法！");
+            return;
+        }
+
         if(cartItem!=null){
             this.totalCount -= cartItem.getCount();
             this.totalPrice -= cartItem.getCount()*cartItem.getPrice();

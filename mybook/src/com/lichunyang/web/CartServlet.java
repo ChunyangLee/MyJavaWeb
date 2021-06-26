@@ -2,6 +2,7 @@ package com.lichunyang.web;
 
 import com.lichunyang.bean.Cart;
 import com.lichunyang.bean.CartItem;
+import com.lichunyang.service.impl.BookServiceimpl;
 import com.lichunyang.utils.WebUtils;
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -31,17 +32,23 @@ public class CartServlet extends BaseServlet {
 
         //第二步：加入购物项 ，  获取请求参数，封装进CartItem中，
         CartItem item = WebUtils.copyParamsToBean(request.getParameterMap(), new CartItem());
+        //add on 2021.6.26 09:08 ,
+        //要检验该id的商品是否存在于数据库中，防止 跳过浏览器直接向服务器发请求
+//      BookServiceimpl bsi = new BookServiceimpl();     //根据id查找，有的话再添加
+
         cart.addCartItem(item);     //count的设置逻辑不在此处，
+        //加入成功后，库存-1，
 
         //第三步： 放入session域中， 请求转发到显示购物车
         session.setAttribute("cart", cart);
-//        request.getRequestDispatcher("/pages/cart/cart.jsp").forward(request, response);
+        session.setAttribute("lastItem", item);
 
-//        response.sendRedirect("/mybook/pages/cart/cart.jsp");
-        response.sendRedirect("/mybook/index.jsp");
+        String pageId = request.getParameter("pageId");
+//        System.out.println("当前访问服务器的浏览器地址: "+ request.getHeader("Referer"));
+//        System.out.println("addItem servlet 获取到了pageId: "+pageId);
+        response.sendRedirect(request.getHeader("Referer"));
 
-//        String pageId = request.getParameter("pageId");
-//        System.out.println("addItem servlet 获取到了pageId");
+
 //        request.getRequestDispatcher("/index.jsp?pageNo="+pageId);
     }
 
@@ -72,9 +79,12 @@ public class CartServlet extends BaseServlet {
         Integer count = Integer.parseInt(request.getParameter("count"));
         Integer id = Integer.parseInt(request.getParameter("id"));
 
+        //可根据id查找到图书商品，得到库存等信息来做检验
         cart.updateItemCountById(id,count);
 
-        response.sendRedirect("/mybook/pages/cart/cart.jsp");
+//        response.sendRedirect("/mybook/pages/cart/cart.jsp");
+        //从哪来回哪去，也可以使用getHeader
+        response.sendRedirect(request.getHeader("Referer"));
 
     }
 

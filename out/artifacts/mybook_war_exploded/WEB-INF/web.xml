@@ -28,6 +28,14 @@
         <servlet-name>CartServlet</servlet-name>
         <servlet-class>com.lichunyang.web.CartServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OrderServlet</servlet-name>
+        <servlet-class>com.lichunyang.web.OrderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ManagerServlet</servlet-name>
+        <servlet-class>com.lichunyang.web.ManagerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>KaptchaServlet</servlet-name>
         <url-pattern>/kaptcha.jpg</url-pattern>
@@ -47,6 +55,14 @@
     <servlet-mapping>
         <servlet-name>CartServlet</servlet-name>
         <url-pattern>/cartServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderServlet</servlet-name>
+        <url-pattern>/orderServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManagerServlet</servlet-name>
+        <url-pattern>/manager/managerServlet</url-pattern>
     </servlet-mapping>
 
 </web-app>
