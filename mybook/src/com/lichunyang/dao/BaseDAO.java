@@ -30,13 +30,10 @@ public abstract class BaseDAO<T> {
      * @param args
      * @return 返回-1说明，执行失败，返回其他表示影响的行数
      */
-    public int update( Connection con, String sql, Object ... args){
+    public int update( Connection con, String sql, Object ... args) throws SQLException {
         int updateCount=-1;
-        try {
-             updateCount = qr.update(con, sql, args);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+
+        updateCount = qr.update(con, sql, args);
         return updateCount;
     }
 
@@ -47,15 +44,10 @@ public abstract class BaseDAO<T> {
      * @param args
      * @return
      */
-    public T getBean(Connection con, String sql, Object ...args){
-        T t=null;
+    public T getBean(Connection con, String sql, Object ...args) throws SQLException{
         ResultSetHandler rsh = new BeanHandler(aClass);
-        try {
-            t= (T) qr.query(con, sql, rsh, args);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return t;
+
+        return  (T) qr.query(con, sql, rsh, args);
     }
 
     /**
@@ -65,33 +57,18 @@ public abstract class BaseDAO<T> {
      * @param args
      * @return
      */
-    public List<T> getBeans(Connection con, String sql, Object ... args){
-        List<T> beanList = null;
-        try {
-            beanList = qr.query(con, sql, new BeanListHandler<T>(aClass), args);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return  beanList;
+    public List<T> getBeans(Connection con, String sql, Object ... args)throws SQLException{
+
+        return qr.query(con, sql, new BeanListHandler<T>(aClass), args);
     }
 
-    public Object getValue(Connection con, String sql, Object ... args){
-        Object o = null;
-        try {
-            o=qr.query(con,sql,new ScalarHandler(),args);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return o;
+    public Object getValue(Connection con, String sql, Object ... args)throws SQLException{
+
+        return qr.query(con,sql,new ScalarHandler(),args);
     }
 
-    public int updateByBatch(Connection con, String sql, Object [][] params){
-        try {
-            return qr.batch(con, sql, params).length;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return  -1;
+    public int updateByBatch(Connection con, String sql, Object [][] params)throws SQLException{
+        return qr.batch(con, sql, params).length;
     }
 
 }

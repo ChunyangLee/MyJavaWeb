@@ -523,6 +523,52 @@ js中页可以跳转页面，
 ## 2021.6.26
 
 ### 1. 订单模块
+完成订单模块，解决了上面购物车模块中提到的小问题。
+jstl标签不好用的话先检查是否导入语句。
 
+### 2. Filter过滤器
+在13_cookie里做的
 
+浏览器缓存
+``` javascript
+    $("#codeImg").click(function () {
+        // alert("点击验证码，刷新！")
+        //后面带的参数是解决部分浏览器缓存的问题，缓存判断的是资源路径和参数都匹配才行
+        this.src="${basePath}/kaptcha.jpg?d="+ new Date();
+    })
+```
+#### 2.0
+FilterConfig对象是filter的配置信息类，可以得到filterName，web.xml配置信息里filter标签下的init-param参数，
+还有ServletContext对象（application）
 
+#### 2.1
+FilterChain执行顺序， 由web.xml配置中的顺序决定的。
+执行有点入栈的感觉，因此访问完目标资源后会从后往前直到浏览器。
+
+#### 2.2
+* 默认在同一个线程中，
+* 同一次请求，
+
+#### 2.3 拦截路径
+* 精确匹配  /admin/a.html
+* 目录     /admin/*
+* 后缀名     *.html    
+
+### 3.ThreadLocal
+和filter组合管理事务， filter可以给所有的servlet里的调用DAO serivice程序加上catch，
+
+例如： 生成订单和销量库存，需要在一个事务内完成。 
+
+出现成功完成订单，订单编号的时候，数据库中要有订单数据，中间出现失误回滚。
+
+    //生成订单后，可能有别的操作比如付款，当出现异常时，则订单生成了，但是没付款，订单要回滚。不能插入到数据库，以及修改商品的库存信息
+    //因此必须要在servlet程序里面，处理异常，异常要一直抛
+  
+配置Filter，/*，这样使用`JdbcUtils.getConnectionByThreadLocal();`方法获取连接操作的会经过Filter，这样Filter里的Finally会关闭连接，而使用处不用关掉连接，
+不经过Filter的也不会受影响。 ****这样不行，没使用`getConnectionByThreadLocal()`的经过Filter后finally会关了getConnectionByThreadLocal()的连接。
+
+结论：还是在Jdbc获取连接时就提供一个方法，`getConnectionByThreadLocal()`
+
+> 使用ThreadLocal时， 关闭连接后，一定要`remove`， 把连接移除，否则下次get的还是这个关闭的连接。
+
+ThreadLocal和Filter组合管理事务， servlet中也异常抛出，这样可以在web.xml中配置，异常处理页面，给用户良好提示，

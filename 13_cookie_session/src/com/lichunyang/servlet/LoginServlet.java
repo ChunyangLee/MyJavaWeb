@@ -23,6 +23,10 @@ public class LoginServlet extends BaseServlet {
         response.addCookie(username1);
         response.addCookie(password1);
 
+        if("abc".equalsIgnoreCase(username) && "123".equalsIgnoreCase(password)){
+            request.getSession().setAttribute("username", username);
+            request.getSession().setAttribute("password", password);
+        }
 
     }
 

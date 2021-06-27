@@ -3,6 +3,7 @@ package com.lichunyang.web;
 import com.lichunyang.bean.Book;
 import com.lichunyang.bean.Page;
 import com.lichunyang.service.impl.BookServiceimpl;
+import com.lichunyang.utils.JdbcUtils;
 import com.lichunyang.utils.WebUtils;
 import org.apache.commons.beanutils.BeanUtils;
 
@@ -11,12 +12,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 public class BookServlet extends BaseServlet {
     BookServiceimpl bsi = new BookServiceimpl();
 
-    protected void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 //        System.out.println("list方法调用！");
         List<Book> bookList = bsi.showBooks();
 //        System.out.println(bookList);  //测试拿到数据。
@@ -24,7 +27,7 @@ public class BookServlet extends BaseServlet {
         request.getRequestDispatcher("/pages/manager/book_manager.jsp").forward(request, response);
     }
 
-    protected void add(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void add(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         Book book = WebUtils.copyParamsToBean(request.getParameterMap(), new Book());
         System.out.println("检测是否将请求参数注入bean\n"+book);
         bsi.addBook(book);
@@ -36,27 +39,27 @@ public class BookServlet extends BaseServlet {
         response.sendRedirect(request.getContextPath()+"/manager/bookServlet?action=page&pageNo="+pageNo);
     }
 
-    protected void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 //        String delete_book_name = request.getParameter("delete_book_name");
         bsi.delteBookByName(request.getParameter("delete_book_name"));
         int pageNo = Integer.parseInt(request.getParameter("totalPageNoForAdd"));
         response.sendRedirect(request.getContextPath()+"/manager/bookServlet?action=page&pageNo="+pageNo);
     }
 
-    protected void getBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void getBook(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         //点击修改后先到servlet程序处理，在转发到book.edit出，
         //应该通过id找唯一得书，这里就不修改了。
         List<Book> books = bsi.queryBookByName(request.getParameter("update_bookName"));
         request.setAttribute("update_books", books);
         request.getRequestDispatcher("/pages/manager/book_edit.jsp").forward(request, response);
     }
-    protected void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         Book book = WebUtils.copyParamsToBean(request.getParameterMap(), new Book());
         bsi.updateBookByName(book, book.getName());
         int pageNo = Integer.parseInt(request.getParameter("totalPageNoForAdd"));
         response.sendRedirect(request.getContextPath()+"/manager/bookServlet?action=page&pageNo="+pageNo);
     }
-    protected void page(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void page(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         //考虑到默认的情况，没传数字，或者没传则 默认值
         Integer pageNo = WebUtils.parseInt(request.getParameter("pageNo"), 1);
         Integer pageSize = WebUtils.parseInt(request.getParameter("pageSize"),4);

@@ -5,6 +5,7 @@ import com.lichunyang.dao.UserDAO;
 import com.lichunyang.dao.impl.UserDAOimpl;
 import com.lichunyang.service.UserService;
 
+import java.sql.SQLException;
 import java.util.List;
 
 //业务层处理登陆和注册，需要和数据库交互，
@@ -14,12 +15,12 @@ public class UserServiceimpl implements UserService {
     private UserDAO udao = new UserDAOimpl();
 
     @Override
-    public boolean registUser(User user) {
+    public boolean registUser(User user) throws SQLException {
         return udao.saveUser(user);
     }
 
     @Override
-    public boolean login(String username, String password) {
+    public boolean login(String username, String password) throws SQLException {
         User user = udao.queryUserByNameAndPassword(username, password);
         if(user!=null) return true;
         else
@@ -27,7 +28,7 @@ public class UserServiceimpl implements UserService {
     }
 
     @Override
-    public boolean existsUsername(String username) {
+    public boolean existsUsername(String username) throws SQLException {
         User user = udao.queryUserByName(username);
         if(user!=null) return true;
         else
@@ -35,7 +36,7 @@ public class UserServiceimpl implements UserService {
     }
 
     @Override
-    public List<User> getUsersByLastName(String lastname) {
+    public List<User> getUsersByLastName(String lastname)throws SQLException {
         return  udao.queryusersByLastName(lastname);
     }
 }

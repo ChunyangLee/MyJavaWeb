@@ -7,6 +7,7 @@ import com.lichunyang.dao.impl.OrderItemDAOimpl;
 import com.lichunyang.service.OrderService;
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class OrderServiceimpl implements OrderService {
         BookDAOimpl bdi = new BookDAOimpl();
 
     @Override
-    public Order createOrder(Integer userId, Cart cart) {
+    public Order createOrder(Integer userId, Cart cart) throws SQLException {
         Order order = new Order();
 
         order.setPrice(cart.getTotalPrice());
@@ -48,37 +49,37 @@ public class OrderServiceimpl implements OrderService {
     }
 
     @Override
-    public List<Order> showOrders(Integer userId) {
+    public List<Order> showOrders(Integer userId) throws SQLException {
        return odi.queryOrdersByUserId(userId);
     }
 
     @Override
-    public List<Order> showAllOrdersForAdmin() {
+    public List<Order> showAllOrdersForAdmin()throws SQLException {
         return odi.queryAllOrders();
     }
 
     @Override
-    public void updateOrderById(String orderId) {
+    public void updateOrderById(String orderId)throws SQLException {
         System.out.println("尚未提供的功能！");
     }
 
     @Override
-    public boolean remove(String orderId) {
+    public boolean remove(String orderId)throws SQLException {
         return odi.removeOrderByOrderId(orderId);
     }
 
     @Override
-    public List<OrderItem> showOrderDetails(String orderId) {
+    public List<OrderItem> showOrderDetails(String orderId)throws SQLException {
         return oidi.queryOrderItemsByOrderId(orderId);
     }
 
     @Override
-    public void receiveOrder(String orderId) {
+    public void receiveOrder(String orderId)throws SQLException {
         odi.changeOrderStatus(Constants.RECEIVED,orderId);
     }
 
     @Override
-    public void sendOrder(String orderId) {
+    public void sendOrder(String orderId)throws SQLException {
         odi.changeOrderStatus(Constants.DELIVERED,orderId);
     }
 }

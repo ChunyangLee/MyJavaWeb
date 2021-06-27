@@ -2,6 +2,7 @@ package com.lichunyang.dao;
 
 import com.lichunyang.bean.Order;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface OrderDAO {
@@ -10,29 +11,29 @@ public interface OrderDAO {
      * @param order
      * @return    true： 成功加入返回
      */
-    boolean saveOrder(Order order);
+    boolean saveOrder(Order order) throws SQLException;
 
-    Order queryOrderByOrderId(String OrderId);
+    Order queryOrderByOrderId(String OrderId) throws SQLException;
 
-    List<Order> queryOrdersByUserId(Integer userId);
+    List<Order> queryOrdersByUserId(Integer userId) throws SQLException;
 
-    boolean updateOrderByOrderId(String OrderId);
+    boolean updateOrderByOrderId(String OrderId) throws SQLException;
 
-    boolean removeOrderByOrderId(String orderId);
+    boolean removeOrderByOrderId(String orderId) throws SQLException;
 
-    boolean removeOrdersByUserId(Integer userId);
+    boolean removeOrdersByUserId(Integer userId) throws SQLException;
 
     /**
      *  管理员，发货，修改订单状态，由订单Id
      * @param status
      * @param orderId
      */
-    void changeOrderStatus(int status, String orderId);
+    void changeOrderStatus(int status, String orderId) throws SQLException;
 
     /**
      *  管理员用， 查询所有订单
      * @return
      */
-    List<Order> queryAllOrders();
+    List<Order> queryAllOrders() throws SQLException;
 
 }

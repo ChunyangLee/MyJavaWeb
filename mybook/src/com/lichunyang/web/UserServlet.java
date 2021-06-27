@@ -11,13 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import static com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY;
 
 public class UserServlet extends BaseServlet {
 
 
-    protected void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         UserServiceimpl usi = new UserServiceimpl();
@@ -39,7 +40,7 @@ public class UserServlet extends BaseServlet {
         }
     }
 
-    protected void regist(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void regist(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 
         User user = WebUtils.copyParamsToBean(request.getParameterMap(), new User());
 
@@ -65,7 +66,7 @@ public class UserServlet extends BaseServlet {
                 request.getRequestDispatcher("/pages/user/regist.jsp").forward(request, response);
 
             }else {
-                us.registUser(user);
+                boolean b = us.registUser(user);
                 //使用转发请求，会出现重复提交表单，因为刷新浏览器， 浏览器会自动提交记录的最后一次请求，
 //                request.getRequestDispatcher("/pages/user/regist_success.jsp").forward(request, response);
                 response.sendRedirect("/mybook/pages/user/regist_success.jsp");

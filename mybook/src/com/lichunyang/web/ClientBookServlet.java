@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  *    用于前台访问的，
@@ -29,7 +30,12 @@ public class ClientBookServlet extends BaseServlet {
 //        System.out.println("Double parse之后的min为"+min);
         Double max= WebUtils.parseDouble(request.getParameter("max"), 1000.0);
 
-        Page<Book> page = bsi.showPage(pageNo,pageSize,min,max );
+        Page<Book> page = null;
+        try {
+            page = bsi.showPage(pageNo,pageSize,min,max );
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         page.setUrl("bookServlet?min="+min+"&max="+max+"&action=page");
 
         request.setAttribute("page", page);
