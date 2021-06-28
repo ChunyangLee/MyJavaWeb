@@ -25,6 +25,7 @@ public class UserDAOimpl extends BaseDAO<User> implements UserDAO {
         Connection con = JdbcUtils.getConnection();
         String sql = "select * from t_user where t_user.username=?";
         User bean = getBean(con, sql, name);
+//        System.out.println(bean);
         return  bean;
     }
 

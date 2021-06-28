@@ -48,12 +48,12 @@ public class JdbcUtils {
                 throwables.printStackTrace();
             }
         }
-        try {
-            System.out.println("连接的状态是否是关闭"+con.isClosed());
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        System.out.println("使用的连接为"+con);
+//        try {
+//            System.out.println("连接的状态是否是关闭"+con.isClosed());
+//        } catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        }
+//        System.out.println("使用的连接为"+con);
         return con;
     }
 

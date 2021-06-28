@@ -572,3 +572,144 @@ FilterChain执行顺序， 由web.xml配置中的顺序决定的。
 > 使用ThreadLocal时， 关闭连接后，一定要`remove`， 把连接移除，否则下次get的还是这个关闭的连接。
 
 ThreadLocal和Filter组合管理事务， servlet中也异常抛出，这样可以在web.xml中配置，异常处理页面，给用户良好提示，
+
+## 2021.6.27
+### 1. Json
+
+#### 1.1 json的定义
+大括号，键值对，
+#### 1.2 json的访问
+本身是一个对象，key可以理解为对象的属性， 通过.key可以访问。
+
+#### 1.3 json对象转字符串
+    var json_string = JSON.stringify(jsonObj);
+#### 1.4 json字符串转json对象
+    JSON.parse(json_string);
+    
+### 2. JSON在Java中的应用
+google的gson.jar包，
+
+#### 2.1 与普通JavaBean的转换
+```java
+    @Test
+    public void test(){
+        Person p1 = new Person(1,"徐胜男");
+
+        Gson gson = new Gson();
+        String p_json = gson.toJson(p1);
+        System.out.println(p_json);
+
+        System.out.println("*************");
+
+        System.out.println(gson.fromJson(p_json, Person.class));
+
+    }
+```
+#### 2.2 与普通JavaBean的List的转换
+要传入List<Person>的类型， 通过反射获得。
+```java
+    @Test
+    public void test2(){
+        Person p1 = new Person(1,"徐胜男");
+        Person p2 = new Person(2,"徐男");
+
+        List<Person> pList = new ArrayList<>();
+        pList.add(p1);
+        pList.add(p2);
+
+        Gson gson = new Gson();
+        final String list_json = gson.toJson(pList);
+// 输出的形式：   [{"id":1,"name":"徐胜男"},{"id":2,"name":"徐男"}]
+
+        List<Person> list = gson.fromJson(list_json, new PersonListType().getType());
+        System.out.println(list);
+        System.out.println(list.get(0));
+    }
+```
+
+#### 2.3 与map的转换
+
+```java
+    @Test
+    public void test3(){
+        HashMap<Integer, Person> map = new HashMap<>();
+        map.put(1, new Person(1,"徐胜男"));
+        map.put(2, new Person(2,"徐男"));
+        Gson gson = new Gson();
+        String str = gson.toJson(map);
+        System.out.println(str);
+        //注意到，全转换成字符串了
+        //{"1":{"id":1,"name":"徐胜男"},"2":{"id":2,"name":"徐男"}}
+
+        HashMap<Integer, Person> map2 = gson.fromJson(str, new MapType().getType());
+        System.out.println(map2);
+        
+    }
+```
+
+### 3. Ajax
+浏览器通过js代码发起异步请求，浏览器地址不变。 send之后不等服务器响应，而往下执行。 
+
+改变局部内容，即通过响应来的内容，通过js绑定事件修改部分内容， 而不是像发起请求地址变了，跳到别的页面而内容全部改变了。
+
+1. 用原生js代码，
+```javascript
+function ajaxRequest() {
+// 				1、我们首先要创建XMLHttpRequest 
+        var xmlHttpRequest = new XMLHttpRequest()
+// 				2、调用open方法设置请求参数
+        xmlHttpRequest.open("get","http://localhost:8080/json_ajax/ajaxServlet?action=ajax",true);
+// 				3、调用send方法发送请求
+        xmlHttpRequest.send();
+// 				4、在send方法前绑定onreadystatechange事件，处理请求完成后的操作。
+        xmlHttpRequest.onreadystatechange=function () {
+            if(xmlHttpRequest.readyState==4 && xmlHttpRequest.status==200){
+                 var p1 = JSON.parse(xmlHttpRequest.responseText);
+                 document.getElementById("div01").innerText="id: "+p1.id+", 姓名："+p1.name;
+            }
+
+        }
+}
+```
+2. JQuery中的ajax请求
+`$.ajax`
+
+ | 参数 ｜  参数内容 | 
+ |  :----: | :----: |
+ |  url  | 标识请求的地址  |
+ |  type | 请求的类型，get or post    |
+ |  data | 发送给服务器的数据    |
+ | dataType | 响应的数据类型 ｜
+ 
+ ```javascript
+        $.ajax({
+            url: "http://localhost:8080/json_ajax/ajaxServlet",
+            type: "get",
+            data: "action=jQueryAjax",
+            success: function (json_string) {
+                alert("服务器的响应数据为： "+json_string);
+            },
+            dataType:"text"
+        });
+        // alert("ajax btn");
+```
+
+`$.getJSON(url,data,callback)` 
+少了2个参数，请求类型和响应数据类型固定了。
+
+3.  表单序列化serialize()
+```javascript
+    $("#getJSONBtn").click(function(){
+            //输出name=value的键值对，
+            // alert($("#form01").serialize());
+
+            $.getJSON("http://localhost:8080/json_ajax/ajaxServlet","action=serialize&"+$("#form01").serialize(),function(data){
+                alert("服务器的响应数据为： "+data);
+            })
+
+        });
+```
+
+### 4. 用ajax优化书城demo
+1. 注册时用户名实时检测，
+2. 加入购物车，不用刷新跳到整个页面，

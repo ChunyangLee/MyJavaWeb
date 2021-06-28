@@ -39,10 +39,19 @@
                     var result = price.match(reg_g);
                     var book_id = $(this).attr("bookId");
                     // alert(result);
+
+                    $.getJSON("cartServlet","action=ajaxAddItem&name="+name+"&price="+result+"&id="+book_id,function (data) {
+                        // alert(data.lastItemName);
+                        // alert(data.cartTotalCount);
+                        $("#last_item").html(data.lastItemName);
+                        $("#totalCount").html("您的购物车中有"+data.cartTotalCount+"件商品");
+
+                    })
+
                     //可以不加pageNO了，使用getHeader可以获得，当前浏览器地址，即访问cartServlet?action=addItem之前的地址，
                     //处理完添加购物车操作重定向回来就行了，
-                    location.href="cartServlet?action=addItem"+"&name="+name+"&price="+result
-                        +"&id="+book_id;
+                    // location.href="cartServlet?action=addItem"+"&name="+name+"&price="+result
+                    //     +"&id="+book_id;
                 </c:if>
 
             });
@@ -82,9 +91,9 @@
             </form>
         </div>
         <div style="text-align: center">
-            <span>您的购物车中有${sessionScope.cart.items.size()}件商品</span>
+            <span id="totalCount">您的购物车中有${sessionScope.cart.totalCount}件商品</span>
             <div>
-                您刚刚将<span style="color: red">${sessionScope.lastItem.name}</span>加入到了购物车中
+                您刚刚将<span id="last_item" style="color: red">${sessionScope.lastItem.name}</span>加入到了购物车中
             </div>
         </div>
         <c:forEach items="${requestScope.page.bookList}" var="book">

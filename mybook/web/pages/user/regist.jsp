@@ -9,15 +9,29 @@
 	<script src="static/script/jquery-1.7.2.js"></script>
 	<script type="text/javascript">
 			$(function () {
+				// added on 2021.6.27， 加上ajax请求，
 				$("#username").blur(function () {
-					// alert("失去焦点！")
-					var patt=/^\w{5,12}$/;
-					if(!patt.test($("#username").val())){
-						$("span.errorMsg").html("用户名不合法！");
-					}else{
-						$("span.errorMsg").html("");
-					}
+					$.getJSON("userServlet","action=assertUsername&username="+$(this).val(),function (data) {
+
+						$("span.errorMsg").html(data.msg);
+
+					})
 				})
+
+
+
+
+
+
+				// $("#username").blur(function () {
+				// 	// alert("失去焦点！")
+				// 	var patt=/^\w{5,12}$/;
+				// 	if(!patt.test($("#username").val())){
+				// 		$("span.errorMsg").html("用户名不合法！");
+				// 	}else{
+				// 		$("span.errorMsg").html("");
+				// 	}
+				// })
 
 				$("#codeImg").click(function () {
 					// alert("点击验证码，刷新！")

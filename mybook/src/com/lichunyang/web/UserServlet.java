@@ -1,5 +1,6 @@
 package com.lichunyang.web;
 
+import com.google.gson.Gson;
 import com.lichunyang.bean.User;
 import com.lichunyang.service.UserService;
 import com.lichunyang.service.impl.UserServiceimpl;
@@ -12,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import static com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY;
 
@@ -19,9 +22,9 @@ public class UserServlet extends BaseServlet {
 
 
     protected void login(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        UserServiceimpl usi = new UserServiceimpl();
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        UserServiceimpl usi = new UserServiceimpl();
         if(!usi.login(username, password)){
 //            System.out.println("登陆失败！");
             request.setAttribute("msg", "用户名或密码错误！");
@@ -90,6 +93,27 @@ public class UserServlet extends BaseServlet {
             session.invalidate();
         }
         response.sendRedirect("/mybook/index.jsp");
+    }
+    protected void assertUsername(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+        String username = request.getParameter("username");
+        UserServiceimpl usi = new UserServiceimpl();
+        HashMap<String, String> map = new HashMap<>();
+        String pattern="^\\w{5,12}$";
+        boolean matches = Pattern.matches(pattern, username);
+        if (matches){
+            if(usi.existsUsername(username)){
+                map.put("msg", "用户名已存在！");
+            }else {
+                map.put("msg", "用户名可用");
+            }
+        }else {
+            map.put("msg", "用户名不合法，请重新输入！");
+        }
+
+        Gson gson = new Gson();
+        String map_json = gson.toJson(map);
+//        System.out.println(map_json);
+        response.getWriter().write(map_json);
     }
 
 

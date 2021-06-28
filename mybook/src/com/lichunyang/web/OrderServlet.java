@@ -44,7 +44,7 @@ public class OrderServlet extends BaseServlet {
 
             order = osi.createOrder(getUserId(request, response), cart);
 
-            int i=12/0;   //测试生成订单后出异常，
+//            int i=12/0;   //测试生成订单后出异常，
             //订单生成后清空购物车
             cart.clear();
 
